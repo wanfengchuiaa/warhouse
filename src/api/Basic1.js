@@ -33,7 +33,7 @@ export function addOpen(data) {
 }
 
 /**
- * 新增仓库
+ * 新增仓库请求CODE
  * */
 export function addOpenID(data) {
   return request({
