@@ -72,25 +72,14 @@
         </div>
       </el-card>
     </div>
-    <el-card>
-      <biaoyi />
-    </el-card>
-    <div style="display:flex;">
-      <biaoer />
-      <biaosan />
-    </div>
   </div>
 
 </template>
 
 <script>
 import { getTodo } from '@/api/table'
-import Biaoyi from '@/views/dashboard/components/biaoyi'
-import Biaoer from '@/views/dashboard/components/biaoer'
-import Biaosan from '@/views/dashboard/components/biaosan'
 
 export default {
-  components: { Biaosan, Biaoer, Biaoyi },
   data() {
     return {
       todoList: [],
@@ -128,7 +117,7 @@ export default {
         item.color = this.color[index]
       })
       this.todoList = res.data.data
-      // console.log(res)
+      console.log(res)
     }
   }
 }

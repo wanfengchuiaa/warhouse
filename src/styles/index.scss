@@ -21,6 +21,10 @@ html {
   box-sizing: border-box;
 }
 
+.el-tag.el-tag--danger .el-tag__close {
+  color: #86909c;
+}
+
 #app {
   height: 100%;
 }

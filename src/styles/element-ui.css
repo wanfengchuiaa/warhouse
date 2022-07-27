@@ -1,0 +1,78 @@
+.el-card {
+  box-shadow: 0 0 6px 0 rgb(188 151 69 / 12%);
+  border-radius: 12px;
+  margin-top: 20px;
+  padding: 20px;
+}
+
+.el-card__body {
+  padding: 0;
+}
+
+
+.el-submenu__title {
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+  margin-right: 30px
+}
+
+.el-input__inner:focus {
+  border: 1px solid #eda200;
+}
+
+.el-input__inner {
+  background-color: #f8f5f5;
+  border: 1px solid transparent;
+}
+
+/*.el-input__inner:hover {*/
+/*  border: 1px solid #333333;*/
+/*}*/
+
+.el-select .el-input.is-focus .el-input__inner {
+  border-color: #eda200;
+}
+
+.el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
+  background-color: #fff6e2;
+}
+
+.el-select .el-input__inner:focus {
+  border-color: #eda200;
+}
+
+.el-table--border .el-table__fixed, .el-table--border .el-table__fixed-right {
+  box-shadow: -2px -5px 5px rgb(0 0 0 / 12%);
+}
+
+.el-table {
+  margin-top: 20px;
+}
+
+.el-table__body .el-table__row.hover-row td {
+  background-color: #fff6e2 !important;
+}
+
+.el-pager li.active {
+  color: #e6a23c;
+  cursor: default;
+}
+
+.el-form-item__label {
+  text-align: right;
+  float: unset !important;
+  font-size: 14px;
+  color: #606266;
+  line-height: 40px;
+  padding: 0 12px 0 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.el-form-item__content {
+  margin-left: 0 !important;
+}
+
+.el-cascader .el-input .el-input__inner:focus, .el-cascader .el-input.is-focus .el-input__inner {
+  border-color: #eda200;
+}

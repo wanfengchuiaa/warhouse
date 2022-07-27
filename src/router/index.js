@@ -47,32 +47,71 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
-    }]
+    children: [
+      {
+        path: 'dashboard',
+        name: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '工作台', icon: 'dashboard' }
+      }
+    ]
   },
-
   {
     path: '/example',
     component: Layout,
-    redirect: '/example/table',
+    redirect: '/example/table1',
     name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
+    meta: { title: '基础信息管理', icon: 'el-icon-s-help' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        path: 'table1',
+        name: 'Table1',
+        component: () => import('@/views/table/BasicInformation1/index'),
+        meta: { title: '仓库管理' }
       },
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+        path: 'details',
+        name: 'details',
+        component: () =>
+          import('@/views/table/BasicInformation1/components/details.vue'),
+        meta: { title: '新增仓库' }
+      },
+      {
+        path: 'details1',
+        name: 'details1',
+        component: () =>
+          import('@/views/table/BasicInformation2/components/details.vue'),
+        meta: { title: '新增库区' }
+      },
+      {
+        path: 'table2',
+        name: 'Table2',
+        component: () => import('@/views/table/BasicInformation2'),
+        meta: { title: '库区管理' }
+      },
+      {
+        path: 'table3',
+        name: 'Table3',
+        component: () => import('@/views/table/BasicInformation3'),
+        meta: { title: '库位管理' }
+      },
+      {
+        path: 'table4',
+        name: 'Table4',
+        component: () => import('@/views/table/BasicInformation4'),
+        meta: { title: '库位视图' }
+      },
+      {
+        path: 'table5',
+        name: 'Table5',
+        component: () => import('@/views/table/BasicInformation5'),
+        meta: { title: '货品管理' }
+      },
+      {
+        path: 'table6',
+        name: 'table6',
+        component: () => import('@/views/table/BasicInformation6'),
+        meta: { title: '货品类型' }
       }
     ]
   },
@@ -120,13 +159,15 @@ export const constantRoutes = [
             children: [
               {
                 path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
+                component: () =>
+                  import('@/views/nested/menu1/menu1-2/menu1-2-1'),
                 name: 'Menu1-2-1',
                 meta: { title: 'Menu1-2-1' }
               },
               {
                 path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
+                component: () =>
+                  import('@/views/nested/menu1/menu1-2/menu1-2-2'),
                 name: 'Menu1-2-2',
                 meta: { title: 'Menu1-2-2' }
               }
@@ -164,11 +205,12 @@ export const constantRoutes = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
+  })
 
 const router = createRouter()
 

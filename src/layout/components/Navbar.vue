@@ -1,30 +1,32 @@
 <template>
-  <div class="navbar">
+  <div class="navbar" style="background-color:#f5f1f1;height: 65px">
     <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+      <el-dropdown class="avatar-container" trigger="hover" @command="OperationList">
+        <div
+          class="avatar-wrapper"
+          style="width: 40px;height: 40px;background-color:#fff;text-align:center;border-radius: 10px;line-height: 40px;margin-top: 14px;"
+        >
+          <i class="el-icon-arrow-down" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
-            <el-dropdown-item>
-              Home
+            <el-dropdown-item icon="el-icon-back" command="delzc">
+              关闭左侧
+            </el-dropdown-item>
+            <el-dropdown-item icon="el-icon-right" command="delyc">
+              关闭右侧
+            </el-dropdown-item>
+            <el-dropdown-item icon="el-icon-close" command="delqt">
+              关闭其他
+            </el-dropdown-item>
+            <el-dropdown-item icon="el-icon-error" command="delqb">
+              关闭全部
             </el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
-            <el-dropdown-item>Github</el-dropdown-item>
-          </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a>
-          <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
-          </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -48,6 +50,17 @@ export default {
     ])
   },
   methods: {
+    OperationList(type) {
+      if (type === 'delzc') {
+        this.$store.commit('handers/delLeftlist')
+      } else if (type === 'delyc') {
+        this.$store.commit('handers/delRightlist')
+      } else if (type === 'delqt') {
+        this.$store.commit('handers/delAlllist')
+      } else {
+        this.$store.commit('handers/delAlllist')
+      }
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
@@ -65,7 +78,7 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
 
   .hamburger-container {
     line-height: 46px;
@@ -73,7 +86,7 @@ export default {
     float: left;
     cursor: pointer;
     transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
       background: rgba(0, 0, 0, .025)
@@ -98,7 +111,7 @@ export default {
       padding: 0 8px;
       height: 100%;
       font-size: 18px;
-      color: #5a5e66;
+      color: #fff6e2;
       vertical-align: text-bottom;
 
       &.hover-effect {
