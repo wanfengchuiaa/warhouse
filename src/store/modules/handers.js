@@ -19,6 +19,12 @@ const mutations = {
       return item !== text
     })
   },
+
+  dellist1(state, text) {
+    state.handerList = state.handerList.filter((item) => {
+      return item.title !== text.title
+    })
+  },
   // 删除全部面包屑
   delAlllist(state) {
     console.log(111111)

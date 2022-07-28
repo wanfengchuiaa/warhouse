@@ -117,7 +117,7 @@
 <script>
 
 import AlCascader from '@/components/al-cascader'
-import { addOpen, addOpenID } from '@/api/Basic1'
+import { addOpen, addOpenID, emidOpenstatus } from '@/api/Basic1'
 
 export default {
   components: { AlCascader },
@@ -132,7 +132,7 @@ export default {
         location: '',
         name: '',
         personName: '',
-        phone: '',
+        phone: '17633616310',
         province: '', // this.arr[0].code,
         status: '',
         surface: '',
@@ -142,31 +142,46 @@ export default {
   },
   created() {
     this.addOpenID()
+    this.dateForm = this.$route.query
   },
   methods: {
     async addOpenID() {
       const res = await addOpenID()
-      console.log(res)
       this.dateForm.code = res.data.data
     },
     async addopen() {
-      try {
-        await addOpen({
-          address: this.dateForm.address,
-          area: this.arr[2].code, // this.arr[2].code,
-          city: this.arr[1].code, // this.arr[1].code,
-          code: this.dateForm.code,
-          location: `${this.arr[0].name}/${this.arr[1].name}/${this.arr[2].name}`,
-          name: this.dateForm.name,
-          personName: this.dateForm.personName,
-          phone: this.dateForm.phone,
-          province: this.arr[0].code, // this.arr[0].code,
-          status: this.dateForm.status === '启用' ? '1' : '0',
-          surface: this.dateForm.surface,
-          type: this.dateForm.type
-        })
-      } catch (e) {
-        console.log(e)
+      if (this.$route.query.id) {
+        try {
+          await emidOpenstatus(this.dateForm)
+          this.$message.success('修改成功')
+          this.$router.back()
+          this.$store.commit('handers/dellist1', this.$route.matched[1].meta)
+        } catch (e) {
+          this.$message.error('修改失败')
+        }
+      } else {
+        try {
+          await addOpen({
+            address: this.dateForm.address,
+            area: this.arr[2].code, // this.arr[2].code,
+            city: this.arr[1].code, // this.arr[1].code,
+            code: this.dateForm.code,
+            location: `${this.arr[0].name}/${this.arr[1].name}/${this.arr[2].name}`,
+            name: this.dateForm.name,
+            personName: this.dateForm.personName,
+            phone: this.dateForm.phone,
+            province: this.arr[0].code, // this.arr[0].code,
+            status: this.dateForm.status === '启用' ? '1' : '0',
+            surface: this.dateForm.surface,
+            type: this.dateForm.type
+          })
+          this.$message.success('新增成功')
+          this.$router.back()
+
+          this.$store.commit('handers/dellist1', this.$route.matched[1].meta)
+        } catch (e) {
+          this.$message.error('新增失败')
+        }
       }
     }
   }

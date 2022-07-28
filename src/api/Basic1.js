@@ -1,4 +1,5 @@
 import request from '@/utils/requestcopy'
+import { data } from 'autoprefixer'
 
 export function GetWarehouse(params) {
   return request({
@@ -10,14 +11,11 @@ export function GetWarehouse(params) {
 /**
  * 修改仓库状态
  * */
-export function emidOpenstatus(id, status) {
+export function emidOpenstatus(data) {
   return request({
-    url: 'ips/warehouse',
+    url: 'api/warehouse',
     method: 'put',
-    data: {
-      id,
-      status
-    }
+    data: data
   })
 }
 
@@ -26,7 +24,7 @@ export function emidOpenstatus(id, status) {
  * */
 export function addOpen(data) {
   return request({
-    url: 'ips/warehouse',
+    url: 'api/warehouse',
     method: 'post',
     data
   })

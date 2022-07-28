@@ -52,7 +52,8 @@ export const constantRoutes = [
         path: 'dashboard',
         name: 'dashboard',
         component: () => import('@/views/dashboard/index'),
-        meta: { title: '工作台', icon: 'dashboard' }
+        meta: { title: '工作台', icon: 'dashboard' },
+        affix: true
       }
     ]
   },
@@ -74,14 +75,24 @@ export const constantRoutes = [
         name: 'details',
         component: () =>
           import('@/views/table/BasicInformation1/components/details.vue'),
-        meta: { title: '新增仓库' }
+        meta: { title: '新增仓库' },
+        hidden: true
       },
       {
         path: 'details1',
         name: 'details1',
         component: () =>
           import('@/views/table/BasicInformation2/components/details.vue'),
-        meta: { title: '新增库区' }
+        meta: { title: '新增库区' },
+        hidden: true
+      },
+      {
+        path: 'details3',
+        name: 'details3',
+        component: () =>
+          import('@/views/table/BasicInformation3/components/details.vue'),
+        meta: { title: '新增库位' },
+        hidden: true
       },
       {
         path: 'table2',

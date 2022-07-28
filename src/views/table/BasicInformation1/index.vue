@@ -104,10 +104,11 @@
           width="130"
         >
           <template v-slot="scope">
-            <el-button type="text" size="small" @click="emid(scope)">编辑</el-button>
-            <el-button type="text" size="small" @click="openShow(scope.row)">{{
-              scope.row.status ? '停用' : '启用'
-            }}
+            <el-button type="text" size="small" @click="checked(scope.row)">编辑</el-button>
+            <el-button type="text" size="small" @click="openShow(scope.row)">
+              {{
+                scope.row.status ? '停用' : '启用'
+              }}
             </el-button>
             <el-button type="text" size="small" @click="delfrom">删除</el-button>
           </template>
@@ -172,18 +173,31 @@ export default {
       this.Pag.like_name = ''
     },
     // 切换
-    checked() {
-      this.$router.push('details')
+    checked(row) {
+      console.log(row)
+      if (row.id) {
+        this.$router.push({
+          path: 'details',
+          query: row
+        })
+      } else {
+        this.$router.push('details')
+      }
     },
     // 发送请求修改仓库状态
     async emidopen() {
       this.dialogVisible = false
       try {
-        await emidOpenstatus(
-          this.open.id,
-          this.open.status ? 0 : 1
+        await emidOpenstatus({
+          id: this.open.id,
+          status: this.open.status ? 0 : 1
+        }
         )
-        this.Message.success('修改成功')
+        this.$message({
+          message: '恭喜你，修改状态成功',
+          type: 'success'
+        })
+        await this.GetWarehouse()
       } catch (e) {
         this.Message.error('修改失败')
       }

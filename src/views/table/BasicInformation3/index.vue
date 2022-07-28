@@ -1,244 +1,292 @@
 <template>
-  <div class="bg">
-    <div style="display:flex;justify-content: space-between">
-      <div style="width: 100%;margin-right: 30px">
-        <div class="table_box">
-          <div class="table_left">
-            <img src="@/assets/login/22.jpg" alt="">
-            <p>仓库管理员</p>
-          </div>
-          <p class="p1">我不是为了输赢，我就是认真！</p>
-          <p class="p2">————罗永浩</p>
-          <div class="table_right" />
-        </div>
-        <el-card shadow="always" style="width: 100%;height: 282px;border-radius: 15px;margin-top: 20px">
-          <h4 style="margin: 13px 0">待办事项</h4>
-          <div style="display:flex;justify-content: space-between">
-            <el-card v-for="(item,index) in todoList" :key="index" shadow="hover" class="kapian">
-              <div style="display:flex; margin-bottom: 20px;align-items: center;padding-top: 0!important;">
-                <div
-                  class="yanse1"
-                  :style="`background-color:${item.color};`"
-                >
-                  <i class="el-icon-s-management" style="line-height: 50px;font-size: 30px;color: #fff" />
-                </div>
-                <div style="margin-left: 15px">{{ item.name }}</div>
-              </div>
-              <div style="margin-top:46px;display:flex;align-items: center" class="todo_div">
-                <span>新增</span><strong
-                  style="margin-right: 15px"
-                >{{ item.value1 }}</strong><span>待审核</span><strong
-                  :style="`color:${item.color};`"
-                >{{ item.value2 }}</strong>
-              </div>
-            </el-card>
-          </div>
-
-        </el-card>
-      </div>
-      <div>
-        <el-card shadow="always" style="width: 261px;height: 451px;padding: 30px;border-radius: 15px;margin: 0">
-          <h4 style="margin-bottom: 0px;margin-top: 0">通知公告</h4>
-          <div v-for="item in 5" :key="item" style="border-top: 1px solid #eee;margin-top: 15px">
-            <p style="margin: 20px 0 0 0;font-size: 14px;">紧急盘点通知</p>
-            <p style="margin-top: 10px;font-size: 12px;">2020.11.22 18:55:22</p>
-          </div>
-        </el-card>
-      </div>
-    </div>
-    <div>
-      <el-card>
-        <h4> 任务导航</h4>
-        <div style="display:flex;justify-content: space-between">
-          <el-card
-            v-for="(item,index) in NavigationTask"
-            :key="index"
-            shadow="hover"
-            class="kapian"
-            style="width: 18%;margin:0 10px"
+  <div style="padding: 0 30px">
+    <el-card>
+      <el-row :gutter="30">
+        <el-col :span="6">
+          <h5 style="margin-top: 0;color: #9d8e88;font-size: 12px;">仓区名称</h5>
+          <el-input v-model="Pag.areaName" placeholder="请输入" />
+        </el-col>
+        <el-col :span="6">
+          <h5 style="margin-top: 0;color: #9d8e88;font-size: 12px;">库位名称</h5>
+          <el-input v-model="Pag.name" placeholder="请输入" />
+        </el-col>
+        <el-col :span="6">
+          <h5 style="margin-top: 0;color: #9d8e88;font-size: 12px;">库位状态</h5>
+          <el-select v-model="status.status" placeholder="请选择" style="width: 100%">
+            <el-option label="全部" value="2" />
+            <el-option label="启用" value="0" />
+            <el-option label="停用" value="1" />
+          </el-select>
+        </el-col>
+        <el-col :span="6">
+          <div
+            style="margin-top: 37px;margin-left: 165px"
           >
-            <div
-              style="display:flex; align-items: center;padding-top: 0!important; justify-content: center;"
-            >
-              <div
+            <el-button type="warning" round @click="QueryLocation">搜索</el-button>
+            <el-button round @click="Reset">重置</el-button>
+          </div>
 
-                :style=" `text-align: center;width: 50px;height: 50px;background-color:${item.icon};border-radius: 10px`"
-              >
-                <i :class="item.color" style="line-height: 50px;font-size: 30px;color: #fff" />
-              </div>
-              <div style="margin-left: 50px">{{ item.text }}</div>
-            </div>
-          </el-card>
-        </div>
-      </el-card>
-    </div>
+        </el-col>
+      </el-row>
+    </el-card>
+    <el-card>
+      <el-row type="flex" justify="">
+        <el-col :span="20">
+          <el-button type="success" round @click="checked">新增库位</el-button>
+        </el-col>
+        <el-col :span="6">
+          <el-button style="margin-right: 30px" round>下载库位模板</el-button>
+          <el-button round>导入库区信息</el-button>
+        </el-col>
+
+      </el-row>
+      <el-table
+        :data="tableData"
+        border
+        style="width: 100%"
+        :header-cell-style="{background:'#f9f6ee','text-align': 'center'}"
+        :cell-style="{'text-align': 'center'}"
+      >
+        <el-table-column
+          type="index"
+          label="序号"
+          width="100"
+        />
+        <el-table-column
+          prop="warehouseName"
+          label="所属仓库"
+          width="150"
+        />
+        <el-table-column
+          prop="code"
+          label="库位编号"
+          width="150"
+        />
+        <el-table-column
+          prop="areaName"
+          label="库区名称"
+          width="150"
+        />
+        <el-table-column
+          prop="areaCode"
+          label="库位编号"
+          width="150"
+        />
+        <el-table-column
+          prop="name"
+          label="库位名称"
+          width="280"
+        />
+        <el-table-column
+          prop="temperatureType"
+          label="温度类型"
+          width="150"
+        >
+          <template v-slot="{row}">
+            <span>{{ row.temperatureType === 'CW' ? '常温' : row.temperatureType === 'HW' ? '恒温' : '冷藏' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="bearingType"
+          label="承重类型"
+          width="150"
+        >
+          <template v-slot="{row}">
+            <span>{{ row.bearingType === 'BX' ? '重型' : row.bearingType === 'ZX' ? '中型' : '轻型' }}</span>
+          </template>
+
+        </el-table-column>
+        <el-table-column
+          prop="useType"
+          label="用途属性"
+          width="150"
+        >
+          <template v-slot="{row}">
+            <span>{{
+              row.useType === 'CCQ' ? '存储区' : row.useType === 'ZJQ' ? '质检区' : row.useType === 'RKHCQ' ? '入库缓存区' : '出库缓存区'
+            }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="status"
+          label="停用状态"
+          width="180"
+        >
+          <template v-slot="{row}">
+            <span>{{ row.status === 1 ? '启用' : '停用' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="maxVolume"
+          label="承载上线"
+          width="150"
+        />
+        <el-table-column
+          prop="updateTime"
+          label="更新时间"
+          width="250"
+        />
+        <el-table-column
+          fixed="right"
+          label="操作"
+          width="130"
+        >
+          <template v-slot="scope">
+            <el-button type="text" size="small" @click="checked(scope.row.id)">编辑</el-button>
+            <el-button type="text" size="small" @click="openShow(scope.row)">{{
+              scope.row.status ? '停用' : '启用'
+            }}
+            </el-button>
+            <el-button type="text" size="small" @click="delfrom">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div style="display:flex;justify-content: center;align-items: center;margin-top: 30px">
+        <el-pagination
+          :current-page="Pag.current"
+          :page-sizes="[1, 2, 4, 5]"
+          :page-size="Pag.size"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="+total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
+    </el-card>
+    <!--    对话框-->
+    <el-dialog
+      :title="`确认${open.status?'停用':'启用'}`"
+      :visible.sync="dialogVisible"
+      width="30%"
+    >
+      <span>确定要{{ open.status ? '停用' : '启用' }} : {{ open.name }}吗？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button round @click="dialogVisible = false">取 消</el-button>
+        <el-button round type="warning" @click="emidopen">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
-
 </template>
-
 <script>
-import { getTodo } from '@/api/table'
+
+import { emidQueryLocation, QueryLocation } from '@/api/Basic3'
 
 export default {
   data() {
     return {
-      todoList: [],
-      color: ['#0076ff', '#ffb200', '#ff7100'],
-      NavigationTask: [{
-        text: '收货任务',
-        icon: '#0076ff',
-        color: 'el-icon-s-ticket'
-      }, {
-        text: '上架任务',
-        icon: '#52d4f3',
-        color: 'el-icon-video-camera-solid'
-      }, {
-        text: '盘点任务',
-        icon: '#ff7100',
-        color: 'el-icon-picture'
-      }, {
-        text: '拣货任务',
-        icon: '#ff609e',
-        color: 'el-icon-s-goods'
-      }, {
-        text: '交接任务',
-        icon: '#ffb200',
-        color: 'el-icon-platform-eleme'
-      }]
+      dialogVisible: false,
+      status: {
+        status: '2'
+      },
+      open: {},
+      currentPage: 1,
+      total: 1,
+      value: '',
+      DepotName: '',
+      tableData: [],
+      Pag: {
+        id: '',
+        name: '',
+        areaName: '',
+        size: 5,
+        current: 1
+      }
     }
   },
+
   created() {
-    this.getTodo()
+    this.QueryLocation()
   },
   methods: {
-    async getTodo() {
-      const res = await getTodo()
-      res.data.data.forEach((item, index) => {
-        item.color = this.color[index]
-      })
-      this.todoList = res.data.data
-      console.log(res)
+    Reset() {
+      this.Pag.areaName = ''
+      this.status.status = '2'
+      this.Pag.name = ''
+    },
+
+    // 切换/编辑
+    checked(id) {
+      if (id) {
+        this.$router.push({
+          path: 'details3',
+          query: {
+            id
+          }
+        })
+      } else {
+        this.$router.push('details3')
+      }
+    },
+    // 发送请求修改仓库状态
+    async emidopen() {
+      this.dialogVisible = false
+      try {
+        await emidQueryLocation({
+          id: this.open.id,
+          status: this.open.status ? 0 : 1
+        }
+        )
+        this.$message.success('修改成功')
+        await this.QueryLocation()
+      } catch (e) {
+        this.$message.success('修改失敗')
+      }
+    },
+    // 打开停启用仓库的对话框
+    openShow(row) {
+      this.dialogVisible = true
+      this.open = row
+    },
+    // 停/启用仓库
+    handleClose(done) {
+
+    },
+
+    // 删除仓库项
+    delfrom() {
+      this.$notify.warning('暂不支持删除功能')
+    },
+    handleSizeChange(val) {
+      this.Pag.size = val
+      this.QueryLocation()
+    },
+    handleCurrentChange(val) {
+      this.Pag.current = val
+      this.QueryLocation()
+    },
+    async QueryLocation() {
+      if (this.status.status !== '2') {
+        const res = await QueryLocation({ ...this.Pag, ...this.status })
+        console.log(res)
+        this.tableData = res.data.data.records
+        this.currentPage = res.data.data.pages
+        this.total = res.data.data.total
+      } else {
+        const res = await QueryLocation(this.Pag)
+        console.log(res)
+        this.tableData = res.data.data.records
+        this.currentPage = res.data.data.pages
+        this.total = res.data.data.total
+      }
     }
   }
 }
 </script>
-<style lang="scss">
-.yanse1 {
-  text-align: center;
-  width: 50px;
-  height: 50px;
-  //background-color: #ffb200;
-  border-radius: 10px
+<style scoped lang="scss">
+
+.el-input__inner {
+  margin: 0 10px;
 }
 
-.todo_div {
-
-  span {
-    margin: 0 6px;
-    font-size: 14px;
-  }
-
-  strong {
-    font-size: 37px;
-    font-weight: 400;
-
-  }
-
-  strong:nth-child(4) {
-    color: #0076ff;
-    font-weight: 400;
-  }
-}
-
-.bg {
-  background-color: #fff;
+.el-select .el-input {
   width: 100%;
-  height: 100%;
-  padding: 30px;
-
 }
 
-.table_box {
-  position: relative;
-  height: 148px;
-  width: 100%;
-  background: linear-gradient(270deg, #ffc771, #ffa634);
-  box-shadow: 0 0 6px 0 rgb(188 151 69 / 12%);
-  border-radius: 12px;
-
-  .p1 {
-    position: absolute;
-    top: 22px;
-    left: 192px;
-    color: #ffffff;
-    font-size: 18px;
-  }
-
-  .p2 {
-    position: absolute;
-    top: 61px;
-    left: 346px;
-    color: #ffffff;
-    font-size: 18px;
-
-  }
-}
-
-.table_left {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 148px;
-  width: 166px;
-  text-align: center;
-  background-image: url('~@/assets/login/img.png');
-  background-size: cover;
-}
-
-.table_left img {
-  position: absolute;
-  left: 50%;
-  top: 40%;
-  transform: translate(-50%, -50%);
-  width: 62px;
-  height: 62px;
-  border-radius: 50%;
-}
-
-.table_left p {
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%);
-  bottom: 10px
-}
-
-.table_right {
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 148px;
-  width: 426px;
-  background-image: url('~@/assets/login/img_1.png');
-  background-size: cover;
-}
-
-.kapian {
-  position: relative;
-  float: left;
-  width: 32%;
-  //height: 186px;
-  background: #fbf7f7;
-  border-radius: 8px;
-  padding: 20px;
-  cursor: pointer;
-  background: hsla(0, 0%, 100%, .8);
-  box-shadow: 0 2px 12px 0 rgb(0 0 0 / 6%);
-  border-radius: 8px;
-  border: 1px solid #f5efee;
-  background-color: #fbf7f7;
-}
-
-.kapian:hover {
-  background-color: #fff;
+.el-button--text {
+  color: #e6a23c;
+  background: 0 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 </style>

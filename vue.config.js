@@ -34,14 +34,45 @@ module.exports = {
     open: true,
     proxy: {
       '/api': {
-        target: 'http://www-wms-java.itheima.net', // 我们要代理的地址
-        changeOrigin: true
+        target: 'http://www-wms-java.itheima.net/', // 我们要代理的地址
+        changeOrigin: true,
+        onProxyReq: function(proxyReq, req, res, options) {
+          if (req.body) {
+            const bodyData = JSON.stringify(req.body)
+            // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
+            proxyReq.setHeader('Content-Type', 'application/json')
+            proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData))
+            // stream the content
+            proxyReq.write(bodyData)
+          }
+        },
+        pathRewrite: {
+          // '^/api5'是一个正则表达式，表示要匹配请求的url中，全部'http://localhost:8081/api5' 转接为 http://localhost:8081/api/
+          '^/ecustom': ''
+        },
+        logLevel: 'debug' // 打印调试信息
       },
       '/ips': {
-        target: 'http://www-wms-java.itheima.net', // 我们要代理的地址
-        changeOrigin: true
+        target: 'http://www-wms-java.itheima.net/', // 我们要代理的地址
+        changeOrigin: true,
+        onProxyReq: function(proxyReq, req, res, options) {
+          if (req.body) {
+            const bodyData = JSON.stringify(req.body)
+            // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
+            proxyReq.setHeader('Content-Type', 'application/json')
+            proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData))
+            // stream the content
+            proxyReq.write(bodyData)
+          }
+        },
+        pathRewrite: {
+          // '^/api5'是一个正则表达式，表示要匹配请求的url中，全部'http://localhost:8081/api5' 转接为 http://localhost:8081/api/
+          '^/ecustom': ''
+        },
+        logLevel: 'debug' // 打印调试信息
       }
     },
+
     overlay: {
       warnings: false,
       errors: true

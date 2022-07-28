@@ -12,17 +12,17 @@
         </el-col>
         <el-col :span="6">
           <h5 style="margin-top: 0;color: #9d8e88;font-size: 12px;">仓库状态</h5>
-          <el-select v-model="Pag.status" placeholder="请选择" style="width: 100%">
-            <el-option label="全部" value=" " />
-            <el-option label="启用" value="1" />
-            <el-option label="停用" value="0" />
+          <el-select v-model="status.status" placeholder="请选择" style="width: 100%">
+            <el-option label="全部" value="2" />
+            <el-option label="启用" value="0" />
+            <el-option label="停用" value="1" />
           </el-select>
         </el-col>
         <el-col :span="6">
           <div
             style="margin-top: 37px;margin-left: 165px"
           >
-            <el-button type="warning" round @click="GetReservoir">搜索</el-button>
+            <el-button type="warning" round @click="GetWarehouse">搜索</el-button>
             <el-button round @click="Reset">重置</el-button>
           </div>
 
@@ -35,8 +35,8 @@
           <el-button type="success" round @click="checked">新增库区</el-button>
         </el-col>
         <el-col :span="6">
-          <el-button style="margin-right: 30px" round @click="checked">下载库区模板</el-button>
-          <el-button round @click="checked">导入库区信息</el-button>
+          <el-button style="margin-right: 30px" round>下载库区模板</el-button>
+          <el-button round>导入库区信息</el-button>
         </el-col>
 
       </el-row>
@@ -113,7 +113,7 @@
           width="130"
         >
           <template v-slot="scope">
-            <el-button type="text" size="small" @click="emid(scope)">编辑</el-button>
+            <el-button type="text" size="small" @click="checked(scope.row.id)">编辑</el-button>
             <el-button type="text" size="small" @click="openShow(scope.row)">{{
               scope.row.status ? '停用' : '启用'
             }}
@@ -150,13 +150,16 @@
   </div>
 </template>
 <script>
-import { emidOpenstatus, GetWarehouse } from '@/api/Basic1'
-import { GetReservoir } from '@/api/Basic2'
+
+import { GetemidReservoir, GetWarehouse } from '@/api/Basic2'
 
 export default {
   data() {
     return {
       dialogVisible: false,
+      status: {
+        status: '2'
+      },
       open: {},
       currentPage: 1,
       total: 1,
@@ -174,30 +177,41 @@ export default {
   },
 
   created() {
-    this.GetReservoir()
+    this.GetWarehouse()
   },
   methods: {
     Reset() {
-      this.warehouseName = ''
-      this.status = ''
-      this.name = ''
+      this.Pag.warehouseName = ''
+      this.status.status = '2'
+      this.Pag.name = ''
     },
 
-    // 切换
-    checked() {
-      this.$router.push('details1')
+    // 切换/编辑
+    checked(id) {
+      if (id) {
+        this.$router.push({
+          path: 'details1',
+          query: {
+            id
+          }
+        })
+      } else {
+        this.$router.push('details1')
+      }
     },
     // 发送请求修改仓库状态
     async emidopen() {
       this.dialogVisible = false
       try {
-        await emidOpenstatus(
-          this.open.id,
-          this.open.status ? 0 : 1
+        await GetemidReservoir({
+          id: this.open.id,
+          status: this.open.status ? 0 : 1
+        }
         )
-        this.Message.success('修改成功')
+        this.$message.success('修改成功')
+        await this.GetWarehouse()
       } catch (e) {
-        this.Message.error('修改失败')
+        this.$message.success('修改失敗')
       }
     },
     // 打开停启用仓库的对话框
@@ -210,28 +224,32 @@ export default {
 
     },
 
-    // 编辑
-    emid(scoped) {
-      console.log(scoped)
-    },
     // 删除仓库项
     delfrom() {
       this.$notify.warning('暂不支持删除功能')
     },
     handleSizeChange(val) {
       this.Pag.size = val
-      this.GetReservoir()
+      this.GetWarehouse()
     },
     handleCurrentChange(val) {
       this.Pag.current = val
-      this.GetReservoir()
+      this.GetWarehouse()
     },
-    async GetReservoir() {
-      const res = await GetReservoir(this.Pag)
-      console.log(res)
-      this.tableData = res.data.data.records
-      this.currentPage = res.data.data.pages
-      this.total = res.data.data.total
+    async GetWarehouse() {
+      if (this.status.status !== '2') {
+        const res = await GetWarehouse({ ...this.Pag, ...this.status })
+        console.log(res)
+        this.tableData = res.data.data.records
+        this.currentPage = res.data.data.pages
+        this.total = res.data.data.total
+      } else {
+        const res = await GetWarehouse(this.Pag)
+        console.log(res)
+        this.tableData = res.data.data.records
+        this.currentPage = res.data.data.pages
+        this.total = res.data.data.total
+      }
     }
   }
 }

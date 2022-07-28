@@ -5,17 +5,10 @@
         <el-row :gutter="30">
           <el-col :span="6">
             <el-form-item
-              label="库区编号"
-            >
-              <el-input v-model="dateForm.code" disabled type="text" autocomplete="off" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item
-              label="所属仓库"
+              label="库区"
               prop="warehouseId"
               :rules="[
-                { required: true, message: '所属仓库不能为空'},
+                { required: true, message: '所属库区不能为空'},
               ]"
             >
               <el-select v-model="dateForm.warehouseId" placeholder="请选择" style="width: 100%">
@@ -26,7 +19,14 @@
           </el-col>
           <el-col :span="6">
             <el-form-item
-              label="库区名称"
+              label="库位编号"
+            >
+              <el-input v-model="dateForm.code" type="text" disabled autocomplete="off" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item
+              label="库位名称"
               prop="name"
               :rules="[
                 { required: true, message: '库区名称不能为空'},
@@ -53,7 +53,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-
+        <!--第二行-->
         <el-row :gutter="30">
           <el-col :span="6">
             <el-form-item
@@ -92,37 +92,100 @@
           </el-col>
           <el-col :span="6">
             <el-form-item
-              label="负责人"
-              prop="personName"
-              :rules="[
-                { required: true, message: '负责人不能为空'},
-              ]"
-            >
-              <el-input v-model="dateForm.personName" type="text" autocomplete="off" />
-            </el-form-item>
-
-          </el-col>
-          <el-col :span="6">
-            <el-form-item
-              label="联系电话"
-              prop="phone"
-              :rules="[
-                { required: true, message: '联系电话不能为空'},
-              ]"
-            >
-              <el-input v-model="dateForm.phone" type="text" autocomplete="off" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="30">
-          <el-col :span="6">
-            <el-form-item
-              label="仓库状态"
+              label="停用状态"
             >
               <el-radio-group v-model="dateForm.status">
                 <el-radio :label="+1">启用</el-radio>
                 <el-radio :label="+0">停用</el-radio>
               </el-radio-group>
+            </el-form-item>
+
+          </el-col>
+        </el-row>
+        <!--第三行-->
+        <el-row :gutter="30">
+          <el-col :span="6">
+            <el-form-item
+              label="承载体积"
+              prop="warehouseId"
+              :rules="[
+                { required: true, message: '承载体积不能为空'},
+              ]"
+            >
+              <el-input v-model="dateForm.code" type="text" autocomplete="off" />
+
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item
+              label="承载上线"
+            >
+              <el-input v-model="dateForm.code" type="text" autocomplete="off" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item
+              label="承载重量"
+              prop="name"
+              :rules="[
+                { required: true, message: '库区名称不能为空'},
+              ]"
+            >
+              <el-input v-model="dateForm.name" type="text" autocomplete="off" />
+            </el-form-item>
+
+          </el-col>
+        </el-row>
+        <!--        第四行-->
+        <el-row :gutter="30">
+          <el-col :span="4">
+            <el-form-item
+              label="库位排/列/行"
+              prop="warehouseId"
+              :rules="[
+                { required: true, message: '承载体积不能为空'},
+              ]"
+            >
+              <el-input v-model="dateForm.code" type="text" autocomplete="off" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item
+              label=" "
+            >
+              <el-input v-model="dateForm.code" type="text" autocomplete="off" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item
+              label=" "
+            >
+              <el-input v-model="dateForm.name" type="text" autocomplete="off" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item
+              label="库位长/宽/高"
+              prop="name"
+              :rules="[
+                { required: true, message: '库区名称不能为空'},
+              ]"
+            >
+              <el-input v-model="dateForm.name" type="text" autocomplete="off" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item
+              label=" "
+            >
+              <el-input v-model="dateForm.name" type="text" autocomplete="off" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item
+              label=" "
+            >
+              <el-input v-model="dateForm.name" type="text" autocomplete="off" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -141,8 +204,7 @@
 </template>
 <script>
 
-import { addOpen } from '@/api/Basic1'
-import { addReservoirID, emidReservoirID, GetReservoir, GoodsInquiryList } from '@/api/Basic2'
+import { getemidQueryLocation } from '@/api/Basic3'
 
 export default {
   data() {
@@ -163,7 +225,7 @@ export default {
     }
   },
   created() {
-    this.GoodsInquiryList()
+    this.getemidQueryLocation()
     this.addReservoirID()
     if (this.$route.query.id) {
       this.emidReservoirID(this.$route.query.id)
@@ -178,8 +240,8 @@ export default {
       const res = await addReservoirID()
       this.dateForm.code = res.data.data
     },
-    async GoodsInquiryList() {
-      const res = await GoodsInquiryList()
+    async getemidQueryLocation() {
+      const res = await getemidQueryLocation()
       console.log(res)
       this.arr = res.data.data
     },
